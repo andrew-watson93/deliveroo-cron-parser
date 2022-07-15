@@ -10,4 +10,9 @@ internal class HourFieldParserTest {
     fun `Single hour fields are supported`(){
         assertThat(HourFieldParser.parse("0")).isEqualTo("hour 0")
     }
+
+    @Test
+    fun `Multiple hour fields separated by commas are supported`(){
+        assertThat(HourFieldParser.parse("0,1,2,3")).isEqualTo("hour 0 1 2 3")
+    }
 }

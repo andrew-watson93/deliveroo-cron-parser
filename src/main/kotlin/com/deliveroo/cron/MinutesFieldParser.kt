@@ -15,21 +15,21 @@ object MinutesFieldParser {
     private val listOfSpecificMinutesRegex = Regex("^(?:\\d|[1-5][\\d)])(?:,(?:\\d|[1-5][\\d)]))*\$")
 
 
-    fun parseMinutes(minutes: String): String {
-        if (minutes == "*") return minutesValuesWithStep()
-        if (minutesStepRegex.matches(minutes)) {
-            val matchResult = minutesStepRegex.find(minutes)!!
+    fun parse(minutesField: String): String {
+        if (minutesField == "*") return minutesValuesWithStep()
+        if (minutesStepRegex.matches(minutesField)) {
+            val matchResult = minutesStepRegex.find(minutesField)!!
             val stepMinutes = Integer.parseInt(matchResult.groupValues[2])
             val (start, end) = findRange(matchResult.groupValues[1])
             return minutesValuesWithStep(start, end, stepMinutes)
         }
-        if (minutesRangeRegex.matches(minutes)) {
-            val matchResult = minutesRangeRegex.find(minutes)!!
+        if (minutesRangeRegex.matches(minutesField)) {
+            val matchResult = minutesRangeRegex.find(minutesField)!!
             val (start, end) = findRange(matchResult.groupValues[0])
             return minutesValuesWithStep(start, end)
         }
-        if (listOfSpecificMinutesRegex.matches(minutes)) {
-            return "minute ${minutes.split(",").joinToString(separator = " ")}"
+        if (listOfSpecificMinutesRegex.matches(minutesField)) {
+            return "minute ${minutesField.split(",").joinToString(separator = " ")}"
         }
         throw InvalidCronException("Invalid input for minutes field")
     }

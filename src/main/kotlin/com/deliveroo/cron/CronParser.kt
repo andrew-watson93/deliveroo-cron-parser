@@ -8,6 +8,6 @@ object CronParser {
         if (split.size != 6) {
             throw InvalidCronException("Invalid cron statement, statement must have 6 fields (minute, hour, day of month, month, day of week, command)")
         }
-        val minutes = MinutesFieldParser.parseMinutes(split[0])
+        val minutes = MinutesFieldParser.parse(split[0])
     }
 }

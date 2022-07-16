@@ -31,4 +31,10 @@ internal class HourFieldParserTest {
         val hours = "*/4"
         assertThat(HourFieldParser.parse(hours)).isEqualTo("hour 0 4 8 12 16 20")
     }
+
+    @Test
+    fun `Hours field should support a step within a range`() {
+        val minutes = "0-6/2"
+        assertThat(HourFieldParser.parse(minutes)).isEqualTo("hour 0 2 4 6")
+    }
 }

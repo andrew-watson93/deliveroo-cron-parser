@@ -17,8 +17,13 @@ object HourFieldParser {
         }
         if (stepRegex.matches(hourField)) {
             val matchResult = stepRegex.find(hourField)!!
+            val (start, end) = if (matchResult.groupValues[1] == "*") {
+                Pair(0, 23)
+            } else {
+                Pair(Integer.parseInt(matchResult.groupValues[2]), Integer.parseInt(matchResult.groupValues[3]))
+            }
             val step = Integer.parseInt(matchResult.groupValues[4])
-            return "hour ${(0..23 step step).joinToString(separator = SPACE)}"
+            return "hour ${(start..end step step).joinToString(separator = SPACE)}"
         }
         return "hour ${hourField.split(",").joinToString(separator = SPACE)}"
     }

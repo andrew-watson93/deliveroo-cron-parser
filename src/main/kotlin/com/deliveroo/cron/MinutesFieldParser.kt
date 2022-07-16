@@ -1,9 +1,8 @@
 package com.deliveroo.cron
 
+import com.deliveroo.cron.ExtensionFunctions.toSpaceSeparatedString
 import com.deliveroo.errorhandling.InvalidCronException
 
-
-private const val SPACE = " "
 
 object MinutesFieldParser {
 
@@ -36,12 +35,12 @@ object MinutesFieldParser {
             return minutesValuesWithStep(start, end)
         }
         if (listOfSpecificMinutesRegex.matches(minutesField)) {
-            return "minute ${minutesField.split(",").joinToString(separator = SPACE)}"
+            return "minute ${minutesField.split(",").toSpaceSeparatedString()}"
         }
         throw InvalidCronException("Invalid input for minutes field")
     }
 
     private fun minutesValuesWithStep(start: Int = 0, end: Int = 59, step: Int = 1) =
-        "minute ${(start..end step step).joinToString(SPACE)}"
+        "minute ${(start..end step step).toSpaceSeparatedString()}"
 
 }

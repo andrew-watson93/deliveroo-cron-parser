@@ -1,6 +1,8 @@
 package com.deliveroo.cron
 
+import com.deliveroo.errorhandling.InvalidCronException
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 
 internal class HourFieldParserTest {
@@ -34,7 +36,13 @@ internal class HourFieldParserTest {
 
     @Test
     fun `Hours field should support a step within a range`() {
-        val minutes = "0-6/2"
-        assertThat(HourFieldParser.parse(minutes)).isEqualTo("hour 0 2 4 6")
+        val hours = "0-6/2"
+        assertThat(HourFieldParser.parse(hours)).isEqualTo("hour 0 2 4 6")
+    }
+
+    @Test
+    fun `Throw an exception for hours outside of the accepted range (0-23)`() {
+        val thrown = assertThrows(InvalidCronException::class.java) { HourFieldParser.parse("24") }
+        assertThat(thrown).hasMessage("Invalid input for hours field")
     }
 }

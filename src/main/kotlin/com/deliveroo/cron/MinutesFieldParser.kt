@@ -3,6 +3,8 @@ package com.deliveroo.cron
 import com.deliveroo.errorhandling.InvalidCronException
 
 
+private const val SPACE = " "
+
 object MinutesFieldParser {
 
     //regex for a minutes field for a range of values, e.g. 5-10
@@ -34,12 +36,12 @@ object MinutesFieldParser {
             return minutesValuesWithStep(start, end)
         }
         if (listOfSpecificMinutesRegex.matches(minutesField)) {
-            return "minute ${minutesField.split(",").joinToString(separator = " ")}"
+            return "minute ${minutesField.split(",").joinToString(separator = SPACE)}"
         }
         throw InvalidCronException("Invalid input for minutes field")
     }
 
     private fun minutesValuesWithStep(start: Int = 0, end: Int = 59, step: Int = 1) =
-        "minute ${(start..end step step).joinToString(" ")}"
+        "minute ${(start..end step step).joinToString(SPACE)}"
 
 }

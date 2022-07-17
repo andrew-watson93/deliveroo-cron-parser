@@ -19,4 +19,9 @@ class MonthFieldParserTest {
     fun `Month field should support a range of digits greater than 1`(){
         assertThat(MonthFieldParser.parse("1-5")).isEqualTo("month 1 2 3 4 5")
     }
+
+    @Test
+    fun `Month field should support a single asterisk`(){
+        assertThat(MonthFieldParser.parse("*")).isEqualTo("month 1 2 3 4 5 6 7 8 9 10 11 12")
+    }
 }

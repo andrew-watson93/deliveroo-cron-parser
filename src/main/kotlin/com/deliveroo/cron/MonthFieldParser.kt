@@ -9,6 +9,9 @@ object MonthFieldParser {
 
     private val rangeRegex = Regex("^([1-9]|1[0-2])-([1-9]|1[0-2])\$")
     fun parse(monthField: String): String {
+        if (monthField == "*") {
+            return "$MONTH ${(1..12).toSpaceSeparatedString()}"
+        }
         if (rangeRegex.matches(monthField)) {
             val matchResult = rangeRegex.find(monthField)!!
             val start = Integer.parseInt(matchResult.groupValues[1])

@@ -42,11 +42,6 @@ internal class DayOfMonthFieldParserTest {
     }
 
     @Test
-    fun `Day of month field should support a comma separated list of days of the month`(){
-        assertThat(DayOfMonthFieldParser.parse("10,20,30")).isEqualTo("day of month 10 20 30")
-    }
-
-    @Test
     fun `Should throw an exception for an invalid day of the month`(){
         val thrown = assertThrows(InvalidCronException::class.java) { DayOfMonthFieldParser.parse("32") }
         assertThat(thrown).hasMessage("Invalid input for day of month field")

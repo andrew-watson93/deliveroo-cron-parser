@@ -2,6 +2,7 @@ package com.deliveroo.cron
 
 import com.deliveroo.cron.ExtensionFunctions.replaceCommasWithSpaces
 import com.deliveroo.cron.ExtensionFunctions.toSpaceSeparatedString
+import com.deliveroo.errorhandling.InvalidCronException
 
 private const val MONTH = "month"
 
@@ -9,6 +10,8 @@ object MonthFieldParser {
 
     private val rangeRegex = Regex("^([1-9]|1[0-2])-([1-9]|1[0-2])\$")
     private val stepRegex = Regex("^(\\*|([1-9]|1[0-2])-([1-9]|1[0-2]))/([1-9]|1[0-2])\$")
+    private val listOfSpecificMonthsRegex = Regex("^(?:[1-9]|1[0-2])(?:,(?:[1-9]|1[0-2]))*\$")
+
     fun parse(monthField: String): String {
         if (monthField == "*") {
             return "$MONTH ${(1..12).toSpaceSeparatedString()}"
@@ -16,7 +19,7 @@ object MonthFieldParser {
         if (stepRegex.matches(monthField)) {
             val matchResult = stepRegex.find(monthField)!!
             val (start, end) = if (matchResult.groupValues[1] == "*") {
-                Pair(1,12)
+                Pair(1, 12)
             } else {
                 Pair(Integer.parseInt(matchResult.groupValues[2]), Integer.parseInt(matchResult.groupValues[3]))
             }
@@ -29,6 +32,9 @@ object MonthFieldParser {
             val end = Integer.parseInt(matchResult.groupValues[2])
             return "$MONTH ${(start..end).toSpaceSeparatedString()}"
         }
-        return "$MONTH ${monthField.replaceCommasWithSpaces()}"
+        if (listOfSpecificMonthsRegex.matches(monthField)) {
+            return "$MONTH ${monthField.replaceCommasWithSpaces()}"
+        }
+        throw InvalidCronException("Invalid input for month field")
     }
 }

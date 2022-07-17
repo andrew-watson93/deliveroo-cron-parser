@@ -41,8 +41,14 @@ internal class HourFieldParserTest {
     }
 
     @Test
-    fun `Throw an exception for hours outside of the accepted range (0-23)`() {
+    fun `Should throw an exception for hours outside of the accepted range (0-23)`() {
         val thrown = assertThrows(InvalidCronException::class.java) { HourFieldParser.parse("24") }
+        assertThat(thrown).hasMessage("Invalid input for hours field")
+    }
+
+    @Test
+    fun `Should throw an exception for an unexpected format`(){
+        val thrown = assertThrows(InvalidCronException::class.java) { HourFieldParser.parse("//*12") }
         assertThat(thrown).hasMessage("Invalid input for hours field")
     }
 }

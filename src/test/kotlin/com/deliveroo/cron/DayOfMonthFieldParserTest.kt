@@ -34,4 +34,9 @@ internal class DayOfMonthFieldParserTest {
         assertThat(DayOfMonthFieldParser.parse("*/7")).isEqualTo("day of month 1 8 15 22 29")
     }
 
+    @Test
+    fun `Day of month field should support a day range with a step`(){
+        assertThat(DayOfMonthFieldParser.parse("10-19/2")).isEqualTo("day of month 10 12 14 16 18")
+    }
+
 }

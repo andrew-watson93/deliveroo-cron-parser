@@ -16,8 +16,13 @@ object DayOfMonthFieldParser {
         }
         if (stepRegex.matches(dayOfMonthField)) {
             val matchResult = stepRegex.find(dayOfMonthField)!!
+            val (start,end) =  if (matchResult.groupValues[1] == "*") {
+                Pair(1,31)
+            } else {
+                Pair(Integer.parseInt(matchResult.groupValues[2]), Integer.parseInt(matchResult.groupValues[3]))
+            }
             val step = Integer.parseInt(matchResult.groupValues[4])
-            return ("$DAY_OF_MONTH ${(1..31 step step).toSpaceSeparatedString()}")
+            return "$DAY_OF_MONTH ${(start..end step step).toSpaceSeparatedString()}"
         }
         if (rangeRegex.matches(dayOfMonthField)) {
             val matchResult = rangeRegex.find(dayOfMonthField)!!

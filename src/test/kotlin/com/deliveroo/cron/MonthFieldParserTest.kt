@@ -24,4 +24,9 @@ class MonthFieldParserTest {
     fun `Month field should support a single asterisk`(){
         assertThat(MonthFieldParser.parse("*")).isEqualTo("month 1 2 3 4 5 6 7 8 9 10 11 12")
     }
+
+    @Test
+    fun `Month field should support an asterisk with a step`(){
+        assertThat(MonthFieldParser.parse("*/2")).isEqualTo("month 1 3 5 7 9 11")
+    }
 }

@@ -10,6 +10,9 @@ object DayOfWeekParser {
     private val rangeRegex = Regex("^([1-7])-([1-7])\$")
 
     fun parse(dayOfWeekField: String): String {
+        if (dayOfWeekField == "*") {
+            return "$DAY_OF_WEEK ${(1..7).toSpaceSeparatedString()}"
+        }
         if (rangeRegex.matches(dayOfWeekField)) {
             val matchResult = rangeRegex.find(dayOfWeekField)!!
             val start = Integer.parseInt(matchResult.groupValues[1])

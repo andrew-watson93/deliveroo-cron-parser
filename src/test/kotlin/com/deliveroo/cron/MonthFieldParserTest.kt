@@ -18,8 +18,13 @@ class MonthFieldParserTest {
     }
 
     @Test
-    fun `Month field should support a range of digits greater than 1`() {
+    fun `Month field should support a range of digits greater than or equal to 1`() {
         assertThat(MonthFieldParser.parse("1-5")).isEqualTo("month 1 2 3 4 5")
+    }
+
+    @Test
+    fun `Month field should support a range of digits less than or equal to 12`() {
+        assertThat(MonthFieldParser.parse("10-12")).isEqualTo("month 10 11 12")
     }
 
     @Test

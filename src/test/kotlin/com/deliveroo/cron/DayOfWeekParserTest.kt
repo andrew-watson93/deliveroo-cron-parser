@@ -1,6 +1,8 @@
 package com.deliveroo.cron
 
+import com.deliveroo.errorhandling.InvalidCronException
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 
 internal class DayOfWeekParserTest {
@@ -38,5 +40,11 @@ internal class DayOfWeekParserTest {
     @Test
     fun `Day of week field should support a range with a step`() {
         assertThat(DayOfWeekParser.parse("1-4/2")).isEqualTo("day of week 1 3")
+    }
+
+    @Test
+    fun `Should throw an exception for an invalid day of the week`(){
+        val thrown = assertThrows(InvalidCronException::class.java) { DayOfWeekParser.parse("9") }
+        assertThat(thrown).hasMessage("Invalid input for day of week field")
     }
 }

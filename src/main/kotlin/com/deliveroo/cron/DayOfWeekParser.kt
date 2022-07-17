@@ -2,6 +2,7 @@ package com.deliveroo.cron
 
 import com.deliveroo.cron.ExtensionFunctions.replaceCommasWithSpaces
 import com.deliveroo.cron.ExtensionFunctions.toSpaceSeparatedString
+import com.deliveroo.errorhandling.InvalidCronException
 
 private const val DAY_OF_WEEK = "day of week"
 
@@ -9,6 +10,7 @@ object DayOfWeekParser {
 
     private val rangeRegex = Regex("^([1-7])-([1-7])\$")
     private val stepRegex = Regex("^(\\*|([1-7])-([1-7]))/([1-7])\$")
+    private val specificListOfDaysOfTheWeekRegex = Regex("^[1-7](?:,[1-7])*\$")
 
 
     fun parse(dayOfWeekField: String): String {
@@ -31,6 +33,9 @@ object DayOfWeekParser {
             val end = Integer.parseInt(matchResult.groupValues[2])
             return "$DAY_OF_WEEK ${(start..end).toSpaceSeparatedString()}"
         }
-        return "$DAY_OF_WEEK ${dayOfWeekField.replaceCommasWithSpaces()}"
+        if (specificListOfDaysOfTheWeekRegex.matches(dayOfWeekField)) {
+            return "$DAY_OF_WEEK ${dayOfWeekField.replaceCommasWithSpaces()}"
+        }
+        throw InvalidCronException("Invalid input for day of week field")
     }
 }

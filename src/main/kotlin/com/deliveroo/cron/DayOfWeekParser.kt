@@ -17,8 +17,13 @@ object DayOfWeekParser {
         }
         if (stepRegex.matches(dayOfWeekField)) {
             val matchResult = stepRegex.find(dayOfWeekField)!!
+            val (start, end) = if (matchResult.groupValues[1] == "*") {
+                Pair(1, 7)
+            } else {
+                Pair(Integer.parseInt(matchResult.groupValues[2]), Integer.parseInt(matchResult.groupValues[3]))
+            }
             val step = Integer.parseInt(matchResult.groupValues[4])
-            return "$DAY_OF_WEEK ${(1..7 step step).toSpaceSeparatedString()}"
+            return "$DAY_OF_WEEK ${(start..end step step).toSpaceSeparatedString()}"
         }
         if (rangeRegex.matches(dayOfWeekField)) {
             val matchResult = rangeRegex.find(dayOfWeekField)!!

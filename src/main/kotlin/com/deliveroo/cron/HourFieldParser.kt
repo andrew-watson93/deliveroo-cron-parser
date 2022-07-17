@@ -1,5 +1,6 @@
 package com.deliveroo.cron
 
+import com.deliveroo.cron.ExtensionFunctions.replaceCommasWithSpaces
 import com.deliveroo.cron.ExtensionFunctions.toSpaceSeparatedString
 import com.deliveroo.errorhandling.InvalidCronException
 
@@ -29,7 +30,7 @@ object HourFieldParser {
             return "hour ${(start..end step step).toSpaceSeparatedString()}"
         }
         if (listOfSpecificHoursRegex.matches(hourField)) {
-            return "hour ${hourField.split(",").toSpaceSeparatedString()}"
+            return "hour ${hourField.replaceCommasWithSpaces()}"
         }
         throw InvalidCronException("Invalid input for hours field")
     }

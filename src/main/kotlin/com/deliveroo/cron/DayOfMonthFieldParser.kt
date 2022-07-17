@@ -8,6 +8,9 @@ object DayOfMonthFieldParser {
     private val rangeRegex = Regex("^([1-9]|[12]\\d|3[01])-([1-9]|[12]\\d|3[01])\$")
 
     fun parse(dayOfMonthField: String): String {
+        if (dayOfMonthField == "*") {
+            return "day of month ${(1..31).toSpaceSeparatedString()}"
+        }
         if (rangeRegex.matches(dayOfMonthField)) {
             val matchResult = rangeRegex.find(dayOfMonthField)!!
             val start = Integer.parseInt(matchResult.groupValues[1])

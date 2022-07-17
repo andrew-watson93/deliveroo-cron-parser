@@ -9,7 +9,7 @@ private const val DAY_OF_MONTH = "day of month"
 object DayOfMonthFieldParser {
 
     private val rangeRegex = Regex("^([1-9]|[12]\\d|3[01])-([1-9]|[12]\\d|3[01])\$")
-    private val stepRegex = Regex("^(\\*|([1-9]|[12]\\d|3[01])-(1-9|[12]\\d|3[01]))/([1-9]|[12]\\d|3[01])\$")
+    private val stepRegex = Regex("^(\\*|([1-9]|[12]\\d|3[01])-([1-9]|[12]\\d|3[01]))/([1-9]|[12]\\d|3[01])\$")
     private val listOfSpecificDaysOfMonthRegex = Regex("^(?:[1-9]|[12]\\d|3[01])(?:,(?:[1-9]|[12]\\d|3[01]))*\$")
 
 

@@ -29,4 +29,9 @@ internal class DayOfWeekParserTest {
     fun `Day of week field should support a single asterisk`(){
         assertThat(DayOfWeekParser.parse("*")).isEqualTo("day of week 1 2 3 4 5 6 7")
     }
+
+    @Test
+    fun `Day of week field should support an asterisk with a step`(){
+        assertThat(DayOfWeekParser.parse("*/2")).isEqualTo("day of week 1 3 5 7")
+    }
 }

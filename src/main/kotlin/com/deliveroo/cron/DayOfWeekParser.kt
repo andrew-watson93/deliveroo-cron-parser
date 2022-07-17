@@ -8,10 +8,17 @@ private const val DAY_OF_WEEK = "day of week"
 object DayOfWeekParser {
 
     private val rangeRegex = Regex("^([1-7])-([1-7])\$")
+    private val stepRegex = Regex("^(\\*|([1-7])-([1-7]))/([1-7])\$")
+
 
     fun parse(dayOfWeekField: String): String {
         if (dayOfWeekField == "*") {
             return "$DAY_OF_WEEK ${(1..7).toSpaceSeparatedString()}"
+        }
+        if (stepRegex.matches(dayOfWeekField)) {
+            val matchResult = stepRegex.find(dayOfWeekField)!!
+            val step = Integer.parseInt(matchResult.groupValues[4])
+            return "$DAY_OF_WEEK ${(1..7 step step).toSpaceSeparatedString()}"
         }
         if (rangeRegex.matches(dayOfWeekField)) {
             val matchResult = rangeRegex.find(dayOfWeekField)!!

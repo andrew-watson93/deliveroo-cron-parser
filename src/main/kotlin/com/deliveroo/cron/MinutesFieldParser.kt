@@ -5,13 +5,15 @@ import com.deliveroo.cron.ExtensionFunctions.toSpaceSeparatedString
 import com.deliveroo.errorhandling.InvalidCronException
 
 
+private const val MINUTE = "minute"
+
 object MinutesFieldParser {
 
     //regex for a minutes field for a range of values, e.g. 5-10
     private val minutesRangeRegex = Regex("^(\\d|[0-5]\\d)-(\\d|[0-5]\\d)\$")
 
     //regex for a minutes field that contains a step, ie a slash, e.g. */15
-    private val minutesStepRegex = Regex("^(\\*|(\\d|[0-5]\\d)-(\\d|[0-5]\\d))/(\\d|[1-2]\\d|30)\$")
+    private val minutesStepRegex = Regex("^(\\*|(\\d|[0-5]\\d)-(\\d|[0-5]\\d))/(\\d|[0-5]\\d)\$")
 
     //regex for a minutes field that contains a single value or a comma separated list, e.g. 5 or 5,6,7,8
     private val listOfSpecificMinutesRegex = Regex("^(?:\\d|[1-5][\\d)])(?:,(?:\\d|[1-5][\\d)]))*\$")
@@ -36,12 +38,12 @@ object MinutesFieldParser {
             return minutesValuesWithStep(start, end)
         }
         if (listOfSpecificMinutesRegex.matches(minutesField)) {
-            return "minute ${minutesField.replaceCommasWithSpaces()}"
+            return "$MINUTE ${minutesField.replaceCommasWithSpaces()}"
         }
-        throw InvalidCronException("Invalid input for minutes field")
+        throw InvalidCronException("Invalid input for ${MINUTE}s field")
     }
 
     private fun minutesValuesWithStep(start: Int = 0, end: Int = 59, step: Int = 1) =
-        "minute ${(start..end step step).toSpaceSeparatedString()}"
+        "$MINUTE ${(start..end step step).toSpaceSeparatedString()}"
 
 }

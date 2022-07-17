@@ -4,20 +4,22 @@ import com.deliveroo.cron.ExtensionFunctions.replaceCommasWithSpaces
 import com.deliveroo.cron.ExtensionFunctions.toSpaceSeparatedString
 import com.deliveroo.errorhandling.InvalidCronException
 
+private const val HOUR = "hour"
+
 object HourFieldParser {
 
     private val rangeRegex = Regex("^(\\d|1\\d|2[0-3])-(\\d|1\\d|2[0-3])\$")
-    private val stepRegex = Regex("^(\\*|(\\d|1\\d|2[0-3])-(\\d|1\\d|2[0-3]))/(\\d|1[0-2])\$")
+    private val stepRegex = Regex("^(\\*|(\\d|1\\d|2[0-3])-(\\d|1\\d|2[0-3]))/(\\d|1\\d|2[0-3])\$")
     private val listOfSpecificHoursRegex = Regex("^(?:\\d|1\\d|2[0-3])(?:,(?:\\d|1\\d|2[0-3]))*\$")
     private val defaultRange = Pair(0, 23)
 
     fun parse(hourField: String): String {
-        if (hourField == "*") return "hour ${(0..23).toSpaceSeparatedString()}"
+        if (hourField == "*") return "$HOUR ${(0..23).toSpaceSeparatedString()}"
         if (rangeRegex.matches(hourField)) {
             val matchResult = rangeRegex.find(hourField)!!
             val start = Integer.parseInt(matchResult.groupValues[1])
             val end = Integer.parseInt(matchResult.groupValues[2])
-            return "hour ${(start..end).toSpaceSeparatedString()}"
+            return "$HOUR ${(start..end).toSpaceSeparatedString()}"
         }
         if (stepRegex.matches(hourField)) {
             val matchResult = stepRegex.find(hourField)!!
@@ -27,12 +29,12 @@ object HourFieldParser {
                 Pair(Integer.parseInt(matchResult.groupValues[2]), Integer.parseInt(matchResult.groupValues[3]))
             }
             val step = Integer.parseInt(matchResult.groupValues[4])
-            return "hour ${(start..end step step).toSpaceSeparatedString()}"
+            return "$HOUR ${(start..end step step).toSpaceSeparatedString()}"
         }
         if (listOfSpecificHoursRegex.matches(hourField)) {
-            return "hour ${hourField.replaceCommasWithSpaces()}"
+            return "$HOUR ${hourField.replaceCommasWithSpaces()}"
         }
-        throw InvalidCronException("Invalid input for hours field")
+        throw InvalidCronException("Invalid input for ${HOUR}s field")
     }
 
 }

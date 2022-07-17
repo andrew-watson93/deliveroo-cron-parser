@@ -47,8 +47,20 @@ internal class HourFieldParserTest {
     }
 
     @Test
-    fun `Should throw an exception for an unexpected format`(){
+    fun `Should throw an exception for an unexpected format`() {
         val thrown = assertThrows(InvalidCronException::class.java) { HourFieldParser.parse("//*12") }
         assertThat(thrown).hasMessage("Invalid input for hours field")
+    }
+
+    @Test
+    fun `Should throw an exception for a range if start hour is greater than end hour`() {
+        val thrown = assertThrows(InvalidCronException::class.java) { HourFieldParser.parse("12-10") }
+        assertThat(thrown).hasMessage("Start hour in range must be less than end hour")
+    }
+
+    @Test
+    fun `Should throw an exception for a range with a step if start month is greater than end month`() {
+        val thrown = assertThrows(InvalidCronException::class.java) { HourFieldParser.parse("12-10/2") }
+        assertThat(thrown).hasMessage("Start hour in range must be less than end hour")
     }
 }

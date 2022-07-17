@@ -55,4 +55,16 @@ internal class MinutesFieldParserTest {
         assertThat(MinutesFieldParser.parse(minutes)).isEqualTo("minute 10 15 20 25 30")
     }
 
+    @Test
+    fun `Should throw an exception for a range if start minute is greater than end minute`() {
+        val thrown = assertThrows(InvalidCronException::class.java) { MinutesFieldParser.parse("12-10") }
+        assertThat(thrown).hasMessage("Start minute in range must be less than end minute")
+    }
+
+    @Test
+    fun `Should throw an exception for a range with a step if start month is greater than end month`() {
+        val thrown = assertThrows(InvalidCronException::class.java) { MinutesFieldParser.parse("12-10/2") }
+        assertThat(thrown).hasMessage("Start minute in range must be less than end minute")
+    }
+
 }

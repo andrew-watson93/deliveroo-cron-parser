@@ -28,6 +28,7 @@ object MinutesFieldParser {
             } else {
                 Pair(Integer.parseInt(matchResult.groupValues[2]), Integer.parseInt(matchResult.groupValues[3]))
             }
+            validateMinuteRange(start, end)
             val stepMinutes = Integer.parseInt(matchResult.groupValues[4])
             return minutesValuesWithStep(start, end, stepMinutes)
         }
@@ -35,12 +36,19 @@ object MinutesFieldParser {
             val matchResult = minutesRangeRegex.find(minutesField)!!
             val start = Integer.parseInt(matchResult.groupValues[1])
             val end = Integer.parseInt(matchResult.groupValues[2])
+            validateMinuteRange(start, end)
             return minutesValuesWithStep(start, end)
         }
         if (listOfSpecificMinutesRegex.matches(minutesField)) {
             return "$MINUTE ${minutesField.replaceCommasWithSpaces()}"
         }
         throw InvalidCronException("Invalid input for ${MINUTE}s field")
+    }
+
+    private fun validateMinuteRange(start: Int, end: Int) {
+        if (start > end) {
+            throw InvalidCronException("Start minute in range must be less than end minute")
+        }
     }
 
     private fun minutesValuesWithStep(start: Int = 0, end: Int = 59, step: Int = 1) =

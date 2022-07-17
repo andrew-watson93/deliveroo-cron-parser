@@ -43,8 +43,20 @@ internal class DayOfWeekParserTest {
     }
 
     @Test
-    fun `Should throw an exception for an invalid day of the week`(){
+    fun `Should throw an exception for an invalid day of the week`() {
         val thrown = assertThrows(InvalidCronException::class.java) { DayOfWeekParser.parse("9") }
         assertThat(thrown).hasMessage("Invalid input for day of week field")
+    }
+
+    @Test
+    fun `Should throw an exception for a range if start day is greater than end day`() {
+        val thrown = assertThrows(InvalidCronException::class.java) { DayOfWeekParser.parse("7-2") }
+        assertThat(thrown).hasMessage("Start day in range must be less than the end day")
+    }
+
+    @Test
+    fun `Should throw an exception for a range with a step if start day is greater than end day`() {
+        val thrown = assertThrows(InvalidCronException::class.java) { DayOfWeekParser.parse("7-2/2") }
+        assertThat(thrown).hasMessage("Start day in range must be less than the end day")
     }
 }

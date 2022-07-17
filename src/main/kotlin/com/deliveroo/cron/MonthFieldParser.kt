@@ -23,6 +23,7 @@ object MonthFieldParser {
             } else {
                 Pair(Integer.parseInt(matchResult.groupValues[2]), Integer.parseInt(matchResult.groupValues[3]))
             }
+            validateMonthRange(start, end)
             val step = Integer.parseInt(matchResult.groupValues[4])
             return "$MONTH ${(start..end step step).toSpaceSeparatedString()}"
         }
@@ -30,11 +31,18 @@ object MonthFieldParser {
             val matchResult = rangeRegex.find(monthField)!!
             val start = Integer.parseInt(matchResult.groupValues[1])
             val end = Integer.parseInt(matchResult.groupValues[2])
+            validateMonthRange(start, end)
             return "$MONTH ${(start..end).toSpaceSeparatedString()}"
         }
         if (listOfSpecificMonthsRegex.matches(monthField)) {
             return "$MONTH ${monthField.replaceCommasWithSpaces()}"
         }
         throw InvalidCronException("Invalid input for month field")
+    }
+
+    private fun validateMonthRange(start: Int, end: Int) {
+        if (start > end) {
+            throw InvalidCronException("Start month in range must be less than end month")
+        }
     }
 }

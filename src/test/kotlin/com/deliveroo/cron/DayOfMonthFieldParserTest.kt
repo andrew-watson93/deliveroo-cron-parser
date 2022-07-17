@@ -32,19 +32,30 @@ internal class DayOfMonthFieldParserTest {
     }
 
     @Test
-    fun `Day of month field should support an asterisk with a step`(){
+    fun `Day of month field should support an asterisk with a step`() {
         assertThat(DayOfMonthFieldParser.parse("*/7")).isEqualTo("day of month 1 8 15 22 29")
     }
 
     @Test
-    fun `Day of month field should support a day range with a step`(){
+    fun `Day of month field should support a day range with a step`() {
         assertThat(DayOfMonthFieldParser.parse("10-19/2")).isEqualTo("day of month 10 12 14 16 18")
     }
 
     @Test
-    fun `Should throw an exception for an invalid day of the month`(){
+    fun `Should throw an exception for an invalid day of the month`() {
         val thrown = assertThrows(InvalidCronException::class.java) { DayOfMonthFieldParser.parse("32") }
         assertThat(thrown).hasMessage("Invalid input for day of month field")
     }
 
+    @Test
+    fun `Should throw an exception for a range if start month is greater than end month`() {
+        val thrown = assertThrows(InvalidCronException::class.java) { DayOfMonthFieldParser.parse("12-10") }
+        assertThat(thrown).hasMessage("Start month in range must be less than end month")
+    }
+
+    @Test
+    fun `Should throw an exception for a range with a step if start month is greater than end month`() {
+        val thrown = assertThrows(InvalidCronException::class.java) { DayOfMonthFieldParser.parse("12-10/2") }
+        assertThat(thrown).hasMessage("Start month in range must be less than end month")
+    }
 }

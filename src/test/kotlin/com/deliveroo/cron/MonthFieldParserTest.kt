@@ -47,4 +47,16 @@ class MonthFieldParserTest {
         val thrown = assertThrows(InvalidCronException::class.java) { MonthFieldParser.parse("13") }
         assertThat(thrown).hasMessage("Invalid input for month field")
     }
+
+    @Test
+    fun `Should throw an exception for a range if start month is greater than end month`() {
+        val thrown = assertThrows(InvalidCronException::class.java) { MonthFieldParser.parse("12-10") }
+        assertThat(thrown).hasMessage("Start month in range must be less than end month")
+    }
+
+    @Test
+    fun `Should throw an exception for a range with a step if start month is greater than end month`() {
+        val thrown = assertThrows(InvalidCronException::class.java) { MonthFieldParser.parse("12-10/2") }
+        assertThat(thrown).hasMessage("Start month in range must be less than end month")
+    }
 }

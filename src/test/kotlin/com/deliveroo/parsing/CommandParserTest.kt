@@ -1,8 +1,6 @@
-package com.deliveroo.cron
+package com.deliveroo.parsing
 
-import com.deliveroo.parsing.CommandParser
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
 internal class CommandParserTest {

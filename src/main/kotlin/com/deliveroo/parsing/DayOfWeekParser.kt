@@ -11,11 +11,11 @@ object DayOfWeekParser {
     private val rangeRegex = Regex("^([1-7])-([1-7])\$")
     private val stepRegex = Regex("^(\\*|([1-7])-([1-7]))/([1-7])\$")
     private val specificListOfDaysOfTheWeekRegex = Regex("^[1-7](?:,[1-7])*\$")
-
+    private val prefix = "$DAY_OF_WEEK${" ".repeat(14 - DAY_OF_WEEK.length)}"
 
     fun parse(dayOfWeekField: String): String {
         if (dayOfWeekField == "*") {
-            return "$DAY_OF_WEEK ${(1..7).toSpaceSeparatedString()}"
+            return "$prefix ${(1..7).toSpaceSeparatedString()}"
         }
         if (stepRegex.matches(dayOfWeekField)) {
             val matchResult = stepRegex.find(dayOfWeekField)!!
@@ -26,17 +26,17 @@ object DayOfWeekParser {
             }
             validateDayOfWeekRange(start, end)
             val step = Integer.parseInt(matchResult.groupValues[4])
-            return "$DAY_OF_WEEK ${(start..end step step).toSpaceSeparatedString()}"
+            return "$prefix ${(start..end step step).toSpaceSeparatedString()}"
         }
         if (rangeRegex.matches(dayOfWeekField)) {
             val matchResult = rangeRegex.find(dayOfWeekField)!!
             val start = Integer.parseInt(matchResult.groupValues[1])
             val end = Integer.parseInt(matchResult.groupValues[2])
             validateDayOfWeekRange(start, end)
-            return "$DAY_OF_WEEK ${(start..end).toSpaceSeparatedString()}"
+            return "$prefix ${(start..end).toSpaceSeparatedString()}"
         }
         if (specificListOfDaysOfTheWeekRegex.matches(dayOfWeekField)) {
-            return "$DAY_OF_WEEK ${dayOfWeekField.replaceCommasWithSpaces()}"
+            return "$prefix ${dayOfWeekField.replaceCommasWithSpaces()}"
         }
         throw InvalidCronException("Invalid input for day of week field")
     }

@@ -11,15 +11,16 @@ object HourFieldParser {
     private val rangeRegex = Regex("^(\\d|1\\d|2[0-3])-(\\d|1\\d|2[0-3])\$")
     private val stepRegex = Regex("^(\\*|(\\d|1\\d|2[0-3])-(\\d|1\\d|2[0-3]))/(\\d|1\\d|2[0-3])\$")
     private val listOfSpecificHoursRegex = Regex("^(?:\\d|1\\d|2[0-3])(?:,(?:\\d|1\\d|2[0-3]))*\$")
+    private val prefix = "$HOUR${" ".repeat(14 - HOUR.length)}"
 
     fun parse(hourField: String): String {
-        if (hourField == "*") return "$HOUR ${(0..23).toSpaceSeparatedString()}"
+        if (hourField == "*") return "$prefix ${(0..23).toSpaceSeparatedString()}"
         if (rangeRegex.matches(hourField)) {
             val matchResult = rangeRegex.find(hourField)!!
             val start = Integer.parseInt(matchResult.groupValues[1])
             val end = Integer.parseInt(matchResult.groupValues[2])
             validateHourRange(start, end)
-            return "$HOUR ${(start..end).toSpaceSeparatedString()}"
+            return "$prefix ${(start..end).toSpaceSeparatedString()}"
         }
         if (stepRegex.matches(hourField)) {
             val matchResult = stepRegex.find(hourField)!!
@@ -30,10 +31,10 @@ object HourFieldParser {
             }
             validateHourRange(start, end)
             val step = Integer.parseInt(matchResult.groupValues[4])
-            return "$HOUR ${(start..end step step).toSpaceSeparatedString()}"
+            return "$prefix ${(start..end step step).toSpaceSeparatedString()}"
         }
         if (listOfSpecificHoursRegex.matches(hourField)) {
-            return "$HOUR ${hourField.replaceCommasWithSpaces()}"
+            return "$prefix ${hourField.replaceCommasWithSpaces()}"
         }
         throw InvalidCronException("Invalid input for hours field")
     }

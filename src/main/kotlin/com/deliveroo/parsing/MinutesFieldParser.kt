@@ -18,6 +18,7 @@ object MinutesFieldParser {
     //regex for a minutes field that contains a single value or a comma separated list, e.g. 5 or 5,6,7,8
     private val listOfSpecificMinutesRegex = Regex("^(?:\\d|[1-5][\\d)])(?:,(?:\\d|[1-5][\\d)]))*\$")
 
+    private val prefix = "$MINUTE${" ".repeat(14 - MINUTE.length)}"
 
     fun parse(minutesField: String): String {
         if (minutesField == "*") return minutesValuesWithStep()
@@ -40,9 +41,9 @@ object MinutesFieldParser {
             return minutesValuesWithStep(start, end)
         }
         if (listOfSpecificMinutesRegex.matches(minutesField)) {
-            return "$MINUTE ${minutesField.replaceCommasWithSpaces()}"
+            return "$prefix ${minutesField.replaceCommasWithSpaces()}"
         }
-        throw InvalidCronException("Invalid input for ${MINUTE}s field")
+        throw InvalidCronException("Invalid input for minutes field")
     }
 
     private fun validateMinuteRange(start: Int, end: Int) {
@@ -52,6 +53,6 @@ object MinutesFieldParser {
     }
 
     private fun minutesValuesWithStep(start: Int = 0, end: Int = 59, step: Int = 1) =
-        "$MINUTE ${(start..end step step).toSpaceSeparatedString()}"
+        "$prefix ${(start..end step step).toSpaceSeparatedString()}"
 
 }

@@ -11,11 +11,12 @@ object DayOfMonthFieldParser {
     private val rangeRegex = Regex("^([1-9]|[12]\\d|3[01])-([1-9]|[12]\\d|3[01])\$")
     private val stepRegex = Regex("^(\\*|([1-9]|[12]\\d|3[01])-([1-9]|[12]\\d|3[01]))/([1-9]|[12]\\d|3[01])\$")
     private val listOfSpecificDaysOfMonthRegex = Regex("^(?:[1-9]|[12]\\d|3[01])(?:,(?:[1-9]|[12]\\d|3[01]))*\$")
+    private val prefix = "$DAY_OF_MONTH${" ".repeat(14 - DAY_OF_MONTH.length)}"
 
 
     fun parse(dayOfMonthField: String): String {
         if (dayOfMonthField == "*") {
-            return "$DAY_OF_MONTH ${(1..31).toSpaceSeparatedString()}"
+            return "$prefix ${(1..31).toSpaceSeparatedString()}"
         }
         if (stepRegex.matches(dayOfMonthField)) {
             val matchResult = stepRegex.find(dayOfMonthField)!!
@@ -26,17 +27,17 @@ object DayOfMonthFieldParser {
             }
             validateMonthRange(start, end)
             val step = Integer.parseInt(matchResult.groupValues[4])
-            return "$DAY_OF_MONTH ${(start..end step step).toSpaceSeparatedString()}"
+            return "$prefix ${(start..end step step).toSpaceSeparatedString()}"
         }
         if (rangeRegex.matches(dayOfMonthField)) {
             val matchResult = rangeRegex.find(dayOfMonthField)!!
             val start = Integer.parseInt(matchResult.groupValues[1])
             val end = Integer.parseInt(matchResult.groupValues[2])
             validateMonthRange(start, end)
-            return "$DAY_OF_MONTH ${(start..end).toSpaceSeparatedString()}"
+            return "$prefix ${(start..end).toSpaceSeparatedString()}"
         }
         if (listOfSpecificDaysOfMonthRegex.matches(dayOfMonthField)) {
-            return "$DAY_OF_MONTH ${dayOfMonthField.replaceCommasWithSpaces()}"
+            return "$prefix ${dayOfMonthField.replaceCommasWithSpaces()}"
         }
         throw InvalidCronException("Invalid input for day of month field")
     }

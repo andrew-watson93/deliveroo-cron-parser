@@ -1,4 +1,4 @@
-package com.deliveroo.cron
+package com.deliveroo.parsing
 
 object CommandParser {
     fun parse(command: String) = "command $command"

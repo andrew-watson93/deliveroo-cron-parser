@@ -1,4 +1,4 @@
-package com.deliveroo.cron
+package com.deliveroo.parsing
 
 private const val SPACE = " "
 

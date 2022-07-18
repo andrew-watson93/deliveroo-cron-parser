@@ -1,6 +1,6 @@
 package cron.deliveroo.cron
 
-import com.deliveroo.cron.CronParser
+import com.deliveroo.parsing.CronParser
 import com.deliveroo.errorhandling.InvalidCronException
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertThrows

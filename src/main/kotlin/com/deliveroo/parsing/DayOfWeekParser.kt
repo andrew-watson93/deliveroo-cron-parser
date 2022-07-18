@@ -1,7 +1,7 @@
-package com.deliveroo.cron
+package com.deliveroo.parsing
 
-import com.deliveroo.cron.ExtensionFunctions.replaceCommasWithSpaces
-import com.deliveroo.cron.ExtensionFunctions.toSpaceSeparatedString
+import com.deliveroo.parsing.ExtensionFunctions.replaceCommasWithSpaces
+import com.deliveroo.parsing.ExtensionFunctions.toSpaceSeparatedString
 import com.deliveroo.errorhandling.InvalidCronException
 
 private const val DAY_OF_WEEK = "day of week"

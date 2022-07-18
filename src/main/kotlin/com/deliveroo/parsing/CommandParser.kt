@@ -1,10 +1,12 @@
 package com.deliveroo.parsing
 
+import com.deliveroo.parsing.ExtensionFunctions.buildPrefix
+
 private const val COMMAND = "command"
 
 object CommandParser {
 
-    private val spaces = " ".repeat(14 - COMMAND.length)
-    fun parse(commandField: String) = "$COMMAND$spaces $commandField"
+    private val prefix = COMMAND.buildPrefix()
+    fun parse(commandField: String) = "$prefix $commandField"
 
 }

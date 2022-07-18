@@ -3,6 +3,7 @@ package com.deliveroo.parsing
 import com.deliveroo.parsing.ExtensionFunctions.replaceCommasWithSpaces
 import com.deliveroo.parsing.ExtensionFunctions.toSpaceSeparatedString
 import com.deliveroo.errorhandling.InvalidCronException
+import com.deliveroo.parsing.ExtensionFunctions.buildPrefix
 
 private const val MONTH = "month"
 
@@ -11,7 +12,7 @@ object MonthFieldParser {
     private val rangeRegex = Regex("^([1-9]|1[0-2])-([1-9]|1[0-2])\$")
     private val stepRegex = Regex("^(\\*|([1-9]|1[0-2])-([1-9]|1[0-2]))/([1-9]|1[0-2])\$")
     private val listOfSpecificMonthsRegex = Regex("^(?:[1-9]|1[0-2])(?:,(?:[1-9]|1[0-2]))*\$")
-    private val prefix = "$MONTH${" ".repeat(14 - MONTH.length)}"
+    private val prefix = MONTH.buildPrefix()
 
     fun parse(monthField: String): String {
         if (monthField == "*") {

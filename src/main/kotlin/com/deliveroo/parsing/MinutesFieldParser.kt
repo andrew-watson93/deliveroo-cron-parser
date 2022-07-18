@@ -3,6 +3,7 @@ package com.deliveroo.parsing
 import com.deliveroo.parsing.ExtensionFunctions.replaceCommasWithSpaces
 import com.deliveroo.parsing.ExtensionFunctions.toSpaceSeparatedString
 import com.deliveroo.errorhandling.InvalidCronException
+import com.deliveroo.parsing.ExtensionFunctions.buildPrefix
 
 
 private const val MINUTE = "minute"
@@ -18,7 +19,7 @@ object MinutesFieldParser {
     //regex for a minutes field that contains a single value or a comma separated list, e.g. 5 or 5,6,7,8
     private val listOfSpecificMinutesRegex = Regex("^(?:\\d|[1-5][\\d)])(?:,(?:\\d|[1-5][\\d)]))*\$")
 
-    private val prefix = "$MINUTE${" ".repeat(14 - MINUTE.length)}"
+    private val prefix = MINUTE.buildPrefix()
 
     fun parse(minutesField: String): String {
         if (minutesField == "*") return minutesValuesWithStep()

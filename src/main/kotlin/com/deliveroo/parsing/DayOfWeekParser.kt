@@ -3,6 +3,7 @@ package com.deliveroo.parsing
 import com.deliveroo.parsing.ExtensionFunctions.replaceCommasWithSpaces
 import com.deliveroo.parsing.ExtensionFunctions.toSpaceSeparatedString
 import com.deliveroo.errorhandling.InvalidCronException
+import com.deliveroo.parsing.ExtensionFunctions.buildPrefix
 
 private const val DAY_OF_WEEK = "day of week"
 
@@ -11,7 +12,7 @@ object DayOfWeekParser {
     private val rangeRegex = Regex("^([1-7])-([1-7])\$")
     private val stepRegex = Regex("^(\\*|([1-7])-([1-7]))/([1-7])\$")
     private val specificListOfDaysOfTheWeekRegex = Regex("^[1-7](?:,[1-7])*\$")
-    private val prefix = "$DAY_OF_WEEK${" ".repeat(14 - DAY_OF_WEEK.length)}"
+    private val prefix = DAY_OF_WEEK.buildPrefix()
 
     fun parse(dayOfWeekField: String): String {
         if (dayOfWeekField == "*") {

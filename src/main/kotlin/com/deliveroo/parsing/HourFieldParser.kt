@@ -3,6 +3,7 @@ package com.deliveroo.parsing
 import com.deliveroo.parsing.ExtensionFunctions.replaceCommasWithSpaces
 import com.deliveroo.parsing.ExtensionFunctions.toSpaceSeparatedString
 import com.deliveroo.errorhandling.InvalidCronException
+import com.deliveroo.parsing.ExtensionFunctions.buildPrefix
 
 private const val HOUR = "hour"
 
@@ -11,7 +12,7 @@ object HourFieldParser {
     private val rangeRegex = Regex("^(\\d|1\\d|2[0-3])-(\\d|1\\d|2[0-3])\$")
     private val stepRegex = Regex("^(\\*|(\\d|1\\d|2[0-3])-(\\d|1\\d|2[0-3]))/(\\d|1\\d|2[0-3])\$")
     private val listOfSpecificHoursRegex = Regex("^(?:\\d|1\\d|2[0-3])(?:,(?:\\d|1\\d|2[0-3]))*\$")
-    private val prefix = "$HOUR${" ".repeat(14 - HOUR.length)}"
+    private val prefix = HOUR.buildPrefix()
 
     fun parse(hourField: String): String {
         if (hourField == "*") return "$prefix ${(0..23).toSpaceSeparatedString()}"

@@ -1,9 +1,8 @@
 package com.deliveroo.parsing
 
-import com.deliveroo.parsing.ExtensionFunctions.replaceCommasWithSpaces
-import com.deliveroo.parsing.ExtensionFunctions.toSpaceSeparatedString
 import com.deliveroo.errorhandling.InvalidCronException
-import com.deliveroo.parsing.ExtensionFunctions.buildPrefix
+import com.deliveroo.parsing.ExtensionFunctions.resultForCommaSeparatedList
+import com.deliveroo.parsing.ExtensionFunctions.resultForTimeWindow
 
 private const val DAY_OF_WEEK = "day of week"
 
@@ -12,11 +11,10 @@ object DayOfWeekParser {
     private val rangeRegex = Regex("^([1-7])-([1-7])\$")
     private val stepRegex = Regex("^(\\*|([1-7])-([1-7]))/([1-7])\$")
     private val specificListOfDaysOfTheWeekRegex = Regex("^[1-7](?:,[1-7])*\$")
-    private val prefix = DAY_OF_WEEK.buildPrefix()
 
     fun parse(dayOfWeekField: String): String {
         if (dayOfWeekField == "*") {
-            return "$prefix ${(1..7).toSpaceSeparatedString()}"
+            return DAY_OF_WEEK.resultForTimeWindow(1, 7)
         }
         if (stepRegex.matches(dayOfWeekField)) {
             val matchResult = stepRegex.find(dayOfWeekField)!!
@@ -27,17 +25,17 @@ object DayOfWeekParser {
             }
             validateDayOfWeekRange(start, end)
             val step = Integer.parseInt(matchResult.groupValues[4])
-            return "$prefix ${(start..end step step).toSpaceSeparatedString()}"
+            return DAY_OF_WEEK.resultForTimeWindow(start, end, step)
         }
         if (rangeRegex.matches(dayOfWeekField)) {
             val matchResult = rangeRegex.find(dayOfWeekField)!!
             val start = Integer.parseInt(matchResult.groupValues[1])
             val end = Integer.parseInt(matchResult.groupValues[2])
             validateDayOfWeekRange(start, end)
-            return "$prefix ${(start..end).toSpaceSeparatedString()}"
+            return DAY_OF_WEEK.resultForTimeWindow(start, end)
         }
         if (specificListOfDaysOfTheWeekRegex.matches(dayOfWeekField)) {
-            return "$prefix ${dayOfWeekField.replaceCommasWithSpaces()}"
+            return DAY_OF_WEEK.resultForCommaSeparatedList(dayOfWeekField)
         }
         throw InvalidCronException("Invalid input for day of week field")
     }

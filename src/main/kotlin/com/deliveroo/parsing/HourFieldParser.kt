@@ -1,9 +1,10 @@
 package com.deliveroo.parsing
 
-import com.deliveroo.parsing.ExtensionFunctions.replaceCommasWithSpaces
-import com.deliveroo.parsing.ExtensionFunctions.toSpaceSeparatedString
 import com.deliveroo.errorhandling.InvalidCronException
 import com.deliveroo.parsing.ExtensionFunctions.buildPrefix
+import com.deliveroo.parsing.ExtensionFunctions.resultForCommaSeparatedList
+import com.deliveroo.parsing.ExtensionFunctions.resultForTimeWindow
+import com.deliveroo.parsing.ExtensionFunctions.toSpaceSeparatedString
 
 private const val HOUR = "hour"
 
@@ -12,16 +13,15 @@ object HourFieldParser {
     private val rangeRegex = Regex("^(\\d|1\\d|2[0-3])-(\\d|1\\d|2[0-3])\$")
     private val stepRegex = Regex("^(\\*|(\\d|1\\d|2[0-3])-(\\d|1\\d|2[0-3]))/(\\d|1\\d|2[0-3])\$")
     private val listOfSpecificHoursRegex = Regex("^(?:\\d|1\\d|2[0-3])(?:,(?:\\d|1\\d|2[0-3]))*\$")
-    private val prefix = HOUR.buildPrefix()
 
     fun parse(hourField: String): String {
-        if (hourField == "*") return "$prefix ${(0..23).toSpaceSeparatedString()}"
+        if (hourField == "*") return HOUR.resultForTimeWindow(0, 23)
         if (rangeRegex.matches(hourField)) {
             val matchResult = rangeRegex.find(hourField)!!
             val start = Integer.parseInt(matchResult.groupValues[1])
             val end = Integer.parseInt(matchResult.groupValues[2])
             validateHourRange(start, end)
-            return "$prefix ${(start..end).toSpaceSeparatedString()}"
+            return HOUR.resultForTimeWindow(start, end)
         }
         if (stepRegex.matches(hourField)) {
             val matchResult = stepRegex.find(hourField)!!
@@ -32,10 +32,10 @@ object HourFieldParser {
             }
             validateHourRange(start, end)
             val step = Integer.parseInt(matchResult.groupValues[4])
-            return "$prefix ${(start..end step step).toSpaceSeparatedString()}"
+            return HOUR.resultForTimeWindow(start, end, step)
         }
         if (listOfSpecificHoursRegex.matches(hourField)) {
-            return "$prefix ${hourField.replaceCommasWithSpaces()}"
+            return HOUR.resultForCommaSeparatedList(hourField)
         }
         throw InvalidCronException("Invalid input for hours field")
     }

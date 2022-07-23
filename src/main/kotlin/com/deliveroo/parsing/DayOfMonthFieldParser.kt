@@ -1,9 +1,8 @@
 package com.deliveroo.parsing
 
-import com.deliveroo.parsing.ExtensionFunctions.replaceCommasWithSpaces
-import com.deliveroo.parsing.ExtensionFunctions.toSpaceSeparatedString
 import com.deliveroo.errorhandling.InvalidCronException
-import com.deliveroo.parsing.ExtensionFunctions.buildPrefix
+import com.deliveroo.parsing.ExtensionFunctions.resultForCommaSeparatedList
+import com.deliveroo.parsing.ExtensionFunctions.resultForTimeWindow
 
 private const val DAY_OF_MONTH = "day of month"
 
@@ -12,12 +11,11 @@ object DayOfMonthFieldParser {
     private val rangeRegex = Regex("^([1-9]|[12]\\d|3[01])-([1-9]|[12]\\d|3[01])\$")
     private val stepRegex = Regex("^(\\*|([1-9]|[12]\\d|3[01])-([1-9]|[12]\\d|3[01]))/([1-9]|[12]\\d|3[01])\$")
     private val listOfSpecificDaysOfMonthRegex = Regex("^(?:[1-9]|[12]\\d|3[01])(?:,(?:[1-9]|[12]\\d|3[01]))*\$")
-    private val prefix = DAY_OF_MONTH.buildPrefix()
 
 
     fun parse(dayOfMonthField: String): String {
         if (dayOfMonthField == "*") {
-            return "$prefix ${(1..31).toSpaceSeparatedString()}"
+            return DAY_OF_MONTH.resultForTimeWindow(1, 31)
         }
         if (stepRegex.matches(dayOfMonthField)) {
             val matchResult = stepRegex.find(dayOfMonthField)!!
@@ -28,17 +26,17 @@ object DayOfMonthFieldParser {
             }
             validateMonthRange(start, end)
             val step = Integer.parseInt(matchResult.groupValues[4])
-            return "$prefix ${(start..end step step).toSpaceSeparatedString()}"
+            return DAY_OF_MONTH.resultForTimeWindow(start, end, step)
         }
         if (rangeRegex.matches(dayOfMonthField)) {
             val matchResult = rangeRegex.find(dayOfMonthField)!!
             val start = Integer.parseInt(matchResult.groupValues[1])
             val end = Integer.parseInt(matchResult.groupValues[2])
             validateMonthRange(start, end)
-            return "$prefix ${(start..end).toSpaceSeparatedString()}"
+            return DAY_OF_MONTH.resultForTimeWindow(start, end)
         }
         if (listOfSpecificDaysOfMonthRegex.matches(dayOfMonthField)) {
-            return "$prefix ${dayOfMonthField.replaceCommasWithSpaces()}"
+            return DAY_OF_MONTH.resultForCommaSeparatedList(dayOfMonthField)
         }
         throw InvalidCronException("Invalid input for day of month field")
     }

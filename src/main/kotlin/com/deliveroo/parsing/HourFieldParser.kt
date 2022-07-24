@@ -1,10 +1,8 @@
 package com.deliveroo.parsing
 
 import com.deliveroo.errorhandling.InvalidCronException
-import com.deliveroo.parsing.ExtensionFunctions.buildPrefix
 import com.deliveroo.parsing.ExtensionFunctions.resultForCommaSeparatedList
 import com.deliveroo.parsing.ExtensionFunctions.resultForTimeWindow
-import com.deliveroo.parsing.ExtensionFunctions.toSpaceSeparatedString
 
 private const val HOUR = "hour"
 
